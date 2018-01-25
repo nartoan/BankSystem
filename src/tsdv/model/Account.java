@@ -31,4 +31,12 @@ public class Account {
 	public void setBalance(double balance) {
 		this.balance = balance;
 	}
+	
+	public String toStringToFile() {
+		return id + "|" + customerId + "|" + balance;
+	}
+	
+	public String toString() {
+		return id + "\t" + customerId + "\t" + balance;
+	}
 }

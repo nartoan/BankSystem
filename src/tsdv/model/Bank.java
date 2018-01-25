@@ -36,4 +36,12 @@ public class Bank {
 	public void setLocation(String location) {
 		this.location = location;
 	}
+	
+	public String toStringToFile() {
+		return id + "|" + name + "|" + location;
+	}
+	
+	public String toString() {
+		return id + "\t" + name + "\t" + location;
+	}
 }
