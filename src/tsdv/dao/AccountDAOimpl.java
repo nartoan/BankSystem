@@ -104,4 +104,25 @@ public class AccountDAOimpl implements AccountDAO {
 		}
 		return account;
 	}
+	
+	@Override
+	public Account searchByIdCustomer(int id) {
+		Account account = null;
+		try {
+			scanner = new Scanner(new File(pathFile));
+			while (scanner.hasNextLine()) {
+				String[] tempAccount = scanner.nextLine().split("\\|");
+				if (Integer.parseInt(tempAccount[1]) == id) {
+					account = new Account(Integer.parseInt(tempAccount[0]), Integer.parseInt(tempAccount[1]),
+							Double.parseDouble(tempAccount[2]));
+				}
+			}
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} finally {
+			if (scanner != null)
+				scanner.close();
+		}
+		return account;
+	}
 }

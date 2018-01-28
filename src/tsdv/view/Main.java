@@ -1,83 +1,125 @@
 package tsdv.view;
 
-import java.awt.EventQueue;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
 
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import java.awt.BorderLayout;
-import javax.swing.SwingConstants;
-import java.awt.Font;
-import javax.swing.JButton;
-import javax.swing.JTextField;
+import tsdv.controller.BankController;
+import tsdv.controller.CustomerController;
+import tsdv.dao.AccountDAO;
+import tsdv.dao.AccountDAOimpl;
+import tsdv.dao.CustomerDAO;
+import tsdv.dao.CustomerDAOimpl;
+import tsdv.model.Account;
+import tsdv.model.Customer;
 
 public class Main {
+	public static void main(String[] args) throws IOException {
+		System.out.println("Bank System");
+		System.out.println("Please choose :");
+		System.out.println("1. Open account for customer");
+		System.out.println("2. Withdraw");
+		System.out.println("3. Deposit");
+		System.out.println("Please choose option: 1 - 3");
+		
+		Scanner scanner = new Scanner(System.in);
+		
+		int inputChar;
+		do {
+			System.out.print("Choose : ");
+			inputChar = scanner.nextInt();
+		} while(inputChar != 1 && inputChar != 2 && inputChar != 3);
 
-	private JFrame frame;
-	private JTextField txtUsername;
-	private JTextField txtPassword;
-
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					Main window = new Main();
-					window.frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
+		switch (inputChar) {
+		case 1:
+			System.out.println("\nCreate account");
+			System.out.println("Create customer: ");
+			Customer customer = new Customer();
+			Account account = new Account();
+			String temp = "";
+			scanner.nextLine();
+			System.out.print("Name :");
+			temp = scanner.nextLine();  customer.setName(temp);
+			
+			System.out.print("Adrress : ");
+			temp = scanner.nextLine();  customer.setAddress(temp);
+			
+			System.out.print("Password : ");
+			temp = scanner.nextLine();  customer.setPassword(temp);
+			customer.setBankId(1);
+			
+			CustomerDAO customerDAOx = new CustomerDAOimpl();
+			List<Customer> customersTemp = customerDAOx.getAll();
+			
+			customer.setId(customersTemp.size() + 1);
+			
+			System.out.println("Create account: ");
+			System.out.print("Balance :");
+			Double balance = scanner.nextDouble();  account.setBalance(balance);
+			account.setCustomerId(customer.getId());
+			
+			
+			account.setId(customersTemp.size() + 1); 
+			
+			List<Account> accounts = new ArrayList<Account>();
+			accounts.add(account);
+			
+			BankController.openAccount(customer, accounts);
+			
+			break;
+		case 2:
+			System.out.println("\nWithdraw : ");
+			System.out.println("List Customer : ");
+			CustomerDAO customerDAO = new CustomerDAOimpl();
+			List<Customer> customers = customerDAO.getAll();
+			System.out.println("Id\t\tName\t\tAddress");
+			for(Customer customerTemp : customers) {
+				System.out.println(customerTemp.toString());
 			}
-		});
-	}
-
-	/**
-	 * Create the application.
-	 */
-	public Main() {
-		initialize();
-	}
-
-	/**
-	 * Initialize the contents of the frame.
-	 */
-	private void initialize() {
-		frame = new JFrame();
-		frame.setBounds(100, 100, 450, 300);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.getContentPane().setLayout(null);
+			
+			System.out.print("Choose customer: ");
+			int idTemp = scanner.nextInt();
+			Customer customer2 = customerDAO.searchById(idTemp);
+			
+			AccountDAO accountDAO = new AccountDAOimpl();
 		
-		JLabel lblNewLabel = new JLabel("Bank System Management");
-		lblNewLabel.setBounds(0, 0, 434, 29);
-		lblNewLabel.setFont(new Font("Tahoma", Font.BOLD, 24));
-		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		frame.getContentPane().add(lblNewLabel);
-		
-		JLabel lblNewLabel_1 = new JLabel("Username :");
-		lblNewLabel_1.setBounds(70, 73, 58, 14);
-		frame.getContentPane().add(lblNewLabel_1);
-		
-		JLabel lblNewLabel_2 = new JLabel("Password :");
-		lblNewLabel_2.setBounds(70, 124, 58, 14);
-		frame.getContentPane().add(lblNewLabel_2);
-		
-		JButton btnLogin = new JButton("Login");
-		btnLogin.setBounds(88, 194, 89, 23);
-		frame.getContentPane().add(btnLogin);
-		
-		JButton btnCancel = new JButton("Cancel");
-		btnCancel.setBounds(238, 194, 89, 23);
-		frame.getContentPane().add(btnCancel);
-		
-		txtUsername = new JTextField();
-		txtUsername.setBounds(189, 70, 159, 20);
-		frame.getContentPane().add(txtUsername);
-		txtUsername.setColumns(10);
-		
-		txtPassword = new JTextField();
-		txtPassword.setBounds(190, 121, 158, 20);
-		frame.getContentPane().add(txtPassword);
-		txtPassword.setColumns(10);
+			Account account2 = accountDAO.searchByIdCustomer(customer2.getId());
+			System.out.print(customer2.toString());
+			System.out.println(account2.toString());
+			System.out.println("Enter money : ");
+			Double money = scanner.nextDouble();
+			CustomerController.withdraw(account2, money);
+			System.out.print(customer2.toString());
+			System.out.println(account2.toString());
+			break;
+			
+		case 3:
+			System.out.println("\nDeposit : ");
+			System.out.println("List Customer : ");
+			CustomerDAO customerDAO1 = new CustomerDAOimpl();
+			List<Customer> customers1 = customerDAO1.getAll();
+			System.out.println("Id\t\tName\t\tAddress");
+			for(Customer customerTemp : customers1) {
+				System.out.println(customerTemp.toString());
+			}
+			
+			System.out.print("Choose customer: ");
+			int idTemp1 = scanner.nextInt();
+			Customer customer3 = customerDAO1.searchById(idTemp1);
+			
+			AccountDAO accountDAO1 = new AccountDAOimpl();
+			Account account3 = accountDAO1.searchByIdCustomer(customer3.getId());
+			System.out.print(customer3.toString());
+			System.out.println(account3.toString());
+			System.out.println("Enter money : ");
+			Double money1 = scanner.nextDouble();
+			BankController.deposit(account3, money1);
+			
+			System.out.print(customer3.toString());
+			System.out.println(account3.toString());
+		default:
+			break;
+		}
 	}
 }

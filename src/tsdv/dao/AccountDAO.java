@@ -11,4 +11,5 @@ public interface AccountDAO {
 	void update(int id, double balance);
 	List<Account> searchByName(String name);
 	Account searchById(int id);
+	Account searchByIdCustomer(int id);
 }

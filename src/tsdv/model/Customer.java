@@ -59,10 +59,10 @@ public class Customer {
 	}
 	
 	public String toStringToFile() {
-		return id + "|" + name + "|" + address + "|" + bankId;
+		return id + "|" + name + "|"+ password + "|" + address + "|" + bankId;
 	}
 	
 	public String toString() {
-		return id + "\t" + name + "\t" + address + "\t" + bankId;
+		return id + "\t" + name + "\t" + address;
 	}
 }

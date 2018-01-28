@@ -37,6 +37,6 @@ public class Account {
 	}
 	
 	public String toString() {
-		return id + "\t" + customerId + "\t" + balance;
+		return "\t" + balance;
 	}
 }
